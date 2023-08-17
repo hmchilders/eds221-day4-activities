@@ -1,0 +1,98 @@
+---
+title: "Loops and Functions"
+author: "Heather"
+format: html
+editor: visual
+execute: 
+  warning: false
+  echo: true
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Task 1
+
+```{r}
+weekdays <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+transects <- c("Transcect A","Transcect B", "Transcect C")
+
+out_matrix <- matrix(nrow = length(weekdays), ncol = length(transects))
+
+for (i in seq_along(weekdays)){
+  for (j in seq_along(transects)){
+    output <- paste(weekdays[i], "-", transects[j])
+    out_matrix[i,j]<- output
+  }
+}
+View(out_matrix)
+```
+
+## Task 2
+
+```{r}
+force <- function(mass_kg, acceleration_m_s2){
+  force_N <-(mass_kg*acceleration_m_s2)
+  print(paste("The resulting force is", force_N, "Newtons."))
+}
+
+force(5,7)
+```
+
+## Task 3
+
+```{r}
+fish_parms <- data.frame(sci_names = c("chanos chanos", "Sphyraena barracuda", "Caranx ignobilis"), common_name = c("Milkfish", "Great Barracuda", "Giant Trevalley"), a_est = c(0.0905, 0.0181, 0.0353), b_est = c(2.52, 3.27, 3.05))
+
+# View(fish_parms)
+
+fish_weight <- function(fish_name, tot_length){
+  fish_subset <- fish_parms %>% filter(fish_name == common_name)
+  W = fish_subset$a_est*tot_length^(fish_subset$b_est)
+  print(W)
+}
+
+fish_weight("Milkfish", 10)
+fish_weight("Great Barracuda", 30)
+fish_weight("Giant Trevalley", 25)
+
+
+fish_lengths <- seq(1:100)
+milkfish_weights <- c(fish_weight("Milkfish",fish_lengths))
+milkfish_weights_df <- data.frame(fish_lengths, milkfish_weights)
+view(milkfish_weights_df)
+```
+
+## Task 4 Wave Power
+
+```{r}
+wave_power <- function(wave_height_m, wave_period_s){
+  P = 0.5 * (wave_height_m^2)*(wave_period_s)
+  print(P)
+}
+wave_heights <- seq(from = 0,to = 3, by = 0.2)
+wave_power(wave_heights, 8)
+```
+
+```{r}
+wave_power_depth <- function(H,T,D){
+  if (D > 12){
+     Power = 0.5 * (H^2)*(T)
+      message( "For deep ocean water, the estimated wave power is ", Power, " kW/m")
+  }
+  else if (D <= 12 & D >= 0) {
+    Power = 0.81*(H^2)*(T)
+    message( "For deep ocean water, the estimated wave power is ", Power, " kW/m")
+    
+  } else if (D < 0){
+    stop("The ocean depth must be greater than 0")
+  }
+}
+
+wave_power_depth(7,8,16)
+
+wave_power_depth(7,8,11)
+
+wave_power_depth(7,8,-3)
+```
